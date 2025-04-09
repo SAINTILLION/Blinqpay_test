@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "970650390015",
+    "project_id": "blinqpost",
+    "storage_bucket": "blinqpost.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970650390015:android:df1b3410291f33963eabca",
+        "android_client_info": {
+          "package_name": "com.blinqpay.blinqpost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970650390015-6idq2cjuflorno5arnqgm0ev6amuramb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVATVkgxyMyy8mnQvf0_rSHbwnO2d4iCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970650390015-6idq2cjuflorno5arnqgm0ev6amuramb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "970650390015-2g5c37011hq0k8gb0g1uao6pggssr827.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.blinqpay.blinqpost"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
