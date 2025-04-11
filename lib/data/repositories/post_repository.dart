@@ -1,4 +1,4 @@
-import '../../core/services/post_service.dart';
+import '../services/post_service.dart';
 import '../../features/posts/model/post_model.dart';
 
 class PostRepository {

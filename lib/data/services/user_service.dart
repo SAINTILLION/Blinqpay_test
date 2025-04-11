@@ -12,4 +12,11 @@ class UserService {
   Future<void> addUser(UserModel user) async {
     await _firestore.collection('users').add(user.toJson());
   }
+
+  Stream<List<UserModel>> streamUsers() {
+  return _firestore.collection('users').snapshots().map((snapshot) {
+    return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();
+  });
+}
+
 }

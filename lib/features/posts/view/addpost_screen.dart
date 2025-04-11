@@ -1,149 +1,192 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class AddPostScreen extends StatelessWidget {
+import '../../posts/view_model/post_bloc.dart';
+import '../../posts/view_model/post_event.dart';
+import '../../posts/view_model/post_state.dart';
+
+class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-   
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.cancel),
+  State<AddPostScreen> createState() => _AddPostScreenState();
+}
+
+class _AddPostScreenState extends State<AddPostScreen> {
+  final ImagePicker _picker = ImagePicker();
+  final TextEditingController contentController = TextEditingController();
+
+  File? _selectedFile;
+  String? _fileType;
+
+  Future<bool> _requestPermissions() async {
+    final permission = Platform.isIOS ? Permission.photos : Permission.storage;
+    final status = await permission.request();
+
+    if (status.isGranted) return true;
+
+    if (status.isPermanentlyDenied) {
+      _showPermissionDeniedWithSettings();
+      openAppSettings();
+    } else {
+      _showPermissionDeniedMessage();
+      openAppSettings();
+    }
+    return false;
+  }
+
+  void _showPermissionDeniedMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Permission denied')),
+    );
+  }
+
+  void _showPermissionDeniedWithSettings() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Permission permanently denied. Please enable it in settings.'),
+        action: SnackBarAction(
+          label: 'Settings',
+          onPressed: () => openAppSettings(),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    );
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    if (await _requestPermissions()) {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        setState(() {
+          _selectedFile = File(image.path);
+          _fileType = 'image';
+        });
+      }
+    }
+  }
+
+  Future<void> _pickVideo() async {
+    if (await _requestPermissions()) {
+      final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+      if (video != null) {
+        final file = File(video.path);
+        final sizeInBytes = await file.length();
+        final sizeInMB = sizeInBytes / (1024 * 1024);
+
+        if (sizeInMB > 10) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Video must be less than 10MB')),
+          );
+          return;
+        }
+
+        setState(() {
+          _selectedFile = file;
+          _fileType = 'video';
+        });
+      }
+    }
+  }
+
+  void _submitPost() {
+    final description = contentController.text.trim();
+
+    if (description.isEmpty && _selectedFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter text or select media')),
+      );
+      return;
+    }
+
+    context.read<PostBloc>().add(
+          AddPost(
+            id: '',
+            username: 'Anonymous', // Replace with actual user data
+            description: description,
+            link: _selectedFile,
+            thumbnail: null, // optional — generate video thumbnails later
+            video: _fileType == 'video',
+            noMedia: _selectedFile == null,
+            userId: 'mock-user-id', // Replace with actual Firebase user ID
+            timestamp: DateTime.now(),
+          ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Post'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.cancel),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: BlocListener<PostBloc, PostState>(
+        listener: (context, state) {
+          if (state is PostAdded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Post submitted!')),
+            );
+            Navigator.pop(context);
+          } else if (state is PostError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Static Write-Up Field
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(9.0),
-                  border: Border.all(
-                    color: Colors.blue, 
-                    width: 1.0,           
-                  ),
-                ),
-                    
-                child: TextField(
-                  maxLines: 8,
-                  maxLength: 200,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    hintText: 'Write A Post...',
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 12.0),
-                  ),
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-              ),
-
-              // Camera Option
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: const EdgeInsets.only(top: 25.0),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Icon(Icons.camera_alt_outlined, color: Colors.blue),
-                      Text("Take a photo", style: TextStyle(fontSize: 16)),
-                      Icon(Icons.arrow_forward_ios_rounded),
-                    ],
+              TextField(
+                controller: contentController,
+                maxLines: 6,
+                maxLength: 200,
+                decoration: InputDecoration(
+                  hintText: 'Write something...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 320,
-                child: Divider(color: Colors.black38),
-              ),
-
-              // Gallery Option
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Icon(Icons.image_outlined, color: Colors.blue),
-                      Text("Choose from gallery", style: TextStyle(fontSize: 16)),
-                      Icon(Icons.arrow_forward_ios_rounded),
-                    ],
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _pickImageFromGallery,
+                    icon: const Icon(Icons.image),
+                    label: const Text('Image'),
                   ),
-                ),
-              ),
-
-              const SizedBox(
-                width: 320,
-                child: Divider(color: Colors.black38),
-              ),
-
-              //video upload option
-              InkWell(
-                onTap: () {
-                  // TODO: Implement video picker and check if file size is <= 10MB
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Icon(Icons.videocam_outlined, color: Colors.blue, size: 30,),
-                      Text(
-                        "Upload a video (Max 10MB)",
-                        style: TextStyle(fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Icon(Icons.arrow_forward_ios_rounded),
-                    ],
+                  ElevatedButton.icon(
+                    onPressed: _pickVideo,
+                    icon: const Icon(Icons.videocam),
+                    label: const Text('Video'),
                   ),
-                ),
+                ],
               ),
-              
-
-              // Post Button (static)
-              Align(
-                child: InkWell(
-                  onTap: () {
-                    //declares what is needed
-                  },
-                  child: Container(
-                    height: 40,
-                    width: 80,
-                    //padding: EdgeInsets.all(4),
-                    margin: const EdgeInsets.only(top: 36.0, bottom: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(6)
-                    ),
-                    child: Center(
-                      child: Text(
-                        "POST",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
+              if (_selectedFile != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: _fileType == 'image'
+                      ? Image.file(_selectedFile!, height: 200)
+                      : const Icon(Icons.videocam, size: 100, color: Colors.blue),
                 ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submitPost,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(50),
+                ),
+                child: const Text('POST'),
               ),
             ],
           ),

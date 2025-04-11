@@ -1,62 +1,53 @@
-enum PostType { text, image, video }
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
   final String id;
   final String username;
   final String description;
-  final String? link;
-  final String thumbnail;
+  final String? link;       // media url (image/video)
+  final String? thumbnail;  // optional thumbnail
   final bool video;
   final bool noMedia;
   final String userId;
   final DateTime timestamp;
 
-
   PostModel({
     required this.id,
-    required this.description,
     required this.username,
-    required this.userId,
-    required this.link,
-    required this.thumbnail,
+    required this.description,
+    this.link,
+    this.thumbnail,
     required this.video,
     required this.noMedia,
+    required this.userId,
     required this.timestamp,
   });
-
-  PostType get type {
-    if (noMedia) return PostType.text;
-    if (video) return PostType.video;
-    return PostType.image;
-  }
 
   factory PostModel.fromFirestore(dynamic doc) {
     final data = doc.data() as Map<String, dynamic>;
     return PostModel(
       id: doc.id,
-      description: data['description'] ?? '',
-      thumbnail: data['thumbnail'],
-      noMedia: data['no_media'] ?? true,
-      video: data['video'] ?? false,
-      userId: data['user_id'] ?? '',
-      timestamp: data['timestamp'] ?? DateTime.now(),
       username: data['username'],
-      link: data['link']
-
+      description: data['description'],
+      link: data['link'],
+      thumbnail: data['thumbnail'],
+      video: data['video'],
+      noMedia: data['no_media'],
+      userId: data['user_id'],
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'username': username,
       'description': description,
       'link': link,
-      'no_media': noMedia,
+      'thumbnail': thumbnail,
       'video': video,
+      'no_media': noMedia,
       'user_id': userId,
-      'username': username,
-      'thumnail': thumbnail,
-      "timestamp" : timestamp
+      'timestamp': timestamp,
     };
   }
 }

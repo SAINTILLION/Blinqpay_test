@@ -1,4 +1,4 @@
-import '../../core/services/user_service.dart';
+import '../services/user_service.dart';
 import '../../features/users/model/user_model.dart';
 
 class UserRepository {
@@ -8,4 +8,8 @@ class UserRepository {
 
   Future<List<UserModel>> getUsers() => userService.fetchUsers();
   Future<void> addUser(UserModel user) => userService.addUser(user);
+  Stream<List<UserModel>> streamUsers() {
+  return userService.streamUsers();
+}
+
 }

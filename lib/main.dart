@@ -1,11 +1,17 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:blinqpay_test/data/repositories/post_repository.dart';
+import 'package:blinqpay_test/data/repositories/user_repository.dart';
+import 'package:blinqpay_test/data/services/post_service.dart';
+import 'package:blinqpay_test/data/services/user_service.dart';
 import 'package:blinqpay_test/features/posts/view/post_screen.dart';
+import 'package:blinqpay_test/features/posts/view_model/post_bloc.dart';
 import 'package:blinqpay_test/features/users/view/user_screen.dart';
+import 'package:blinqpay_test/features/users/view_model/user_bloc.dart';
 import 'package:blinqpay_test/firebase_options.dart';
-import 'package:blinqpay_test/shared/route.dart';
-import 'package:blinqpay_test/shared/theme/app_theme.dart';
-import 'package:blinqpay_test/shared/theme/color_theme/color_theme_bloc.dart';
-import 'package:blinqpay_test/shared/theme/color_theme/color_theme_state.dart';
+import 'package:blinqpay_test/core/route.dart';
+import 'package:blinqpay_test/core/theme/app_theme.dart';
+import 'package:blinqpay_test/core/theme/color_theme/color_theme_bloc.dart';
+import 'package:blinqpay_test/core/theme/color_theme/color_theme_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +22,10 @@ void main() async{
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform
   );
+  // Sign in anonymously if not signed in
+  //if (FirebaseAuth.instance.currentUser == null) {
+    //await FirebaseAuth.instance.signInAnonymously();
+  //}
   runApp(MyApp());
 }
 
@@ -27,6 +37,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => UserBloc(UserRepository(UserService()))),
+        BlocProvider(create: (_) => PostBloc(PostRepository(PostService())))
+
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>( // Specify the cubit type
         builder: (context, themeState) {

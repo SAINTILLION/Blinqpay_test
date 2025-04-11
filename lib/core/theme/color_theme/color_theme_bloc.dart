@@ -1,4 +1,4 @@
-import 'package:blinqpay_test/shared/theme/color_theme/color_theme_state.dart';
+import 'package:blinqpay_test/core/theme/color_theme/color_theme_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
