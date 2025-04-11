@@ -107,10 +107,11 @@ service firebase.storage {
     }
   }
 }
+```
 
 2. **Implement the correct authentication flow** once you confirm the required auth method from your Firebase project.  
     I previously attempted **anonymous login for testing**, but it did not work — likely due to the same rules expecting a specific authentication provider.
 
 
-Note: This only for testing purpose and is not recommended for production.
-After which populate the user post and user collection through the Add User Screen and Add Post Screen.
+- **Note:** This only for testing purpose and is not recommended for production.
+### After which populate the user post and user collection through the Add User Screen and Add Post Screen.
