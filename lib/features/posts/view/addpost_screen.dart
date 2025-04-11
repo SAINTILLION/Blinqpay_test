@@ -5,14 +5,7 @@ class AddPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> occupations = [
-      "Electrician",
-      "Mechanic",
-      "Makeup Artist",
-      "Plumber",
-      "Other",
-    ];
-
+   
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,74 +28,28 @@ class AddPostScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(9.0)),
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(9.0),
+                  border: Border.all(
+                    color: Colors.blue, 
+                    width: 1.0,           
+                  ),
+                ),
+                    
                 child: TextField(
                   maxLines: 8,
+                  maxLength: 200,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     hintText: 'Write A Post...',
                     border: const OutlineInputBorder(
-                        borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(color: Colors.blue),
+                      borderSide: BorderSide.none,
                     ),
+                
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 12.0),
                   ),
                   style: const TextStyle(fontSize: 16.0),
-                ),
-              ),
-
-              // Notify Freelancer Option UI (static)
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(left: 8.0, top: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Checkbox(value: false, onChanged: null),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Notify a freelancer',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: const Text(
-                            'This allows your post to directly notify a freelancer who you might need to come work for you.',
-                            style: TextStyle(fontSize: 12, color: Colors.black54),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Static Occupation Options
-              Container(
-                margin: const EdgeInsets.only(top: 30.0),
-                child: Column(
-                  children: [
-                    const Text('Select an Occupation:'),
-                    const SizedBox(height: 6.0),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 8.0,
-                      children: occupations.map((category) {
-                        return ChoiceChip(
-                          label: Text(category),
-                          selected: false,
-                          onSelected: null,
-                        );
-                      }).toList(),
-                    ),
-                  ],
                 ),
               ),
 
@@ -145,26 +92,56 @@ class AddPostScreen extends StatelessWidget {
                 ),
               ),
 
+              const SizedBox(
+                width: 320,
+                child: Divider(color: Colors.black38),
+              ),
+
+              //video upload option
+              InkWell(
+                onTap: () {
+                  // TODO: Implement video picker and check if file size is <= 10MB
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Icon(Icons.videocam_outlined, color: Colors.blue, size: 30,),
+                      Text(
+                        "Upload a video (Max 10MB)",
+                        style: TextStyle(fontSize: 16),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Icon(Icons.arrow_forward_ios_rounded),
+                    ],
+                  ),
+                ),
+              ),
+              
+
               // Post Button (static)
-              Container(
-                margin: const EdgeInsets.only(top: 36.0, bottom: 10.0),
-                alignment: Alignment.bottomRight,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(color: Colors.blue),
+              Align(
+                child: InkWell(
+                  onTap: () {
+                    //declares what is needed
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 80,
+                    //padding: EdgeInsets.all(4),
+                    margin: const EdgeInsets.only(top: 36.0, bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(6)
+                    ),
+                    child: Center(
+                      child: Text(
+                        "POST",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                  ),
-                  child: const Text(
-                    "POST",
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),

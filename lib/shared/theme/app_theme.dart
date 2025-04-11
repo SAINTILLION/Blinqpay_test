@@ -13,8 +13,8 @@ class AppTheme {
       background: Colors.white,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
       elevation: 0,
     ),
     textTheme: const TextTheme(

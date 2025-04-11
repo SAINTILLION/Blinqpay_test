@@ -1,15 +1,14 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.gms.google-services") // Add Firebase Gradle plugin
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services") // Apply Firebase Gradle plugin
+    id("dev.flutter.flutter-gradle-plugin") // The Flutter Gradle Plugin must be applied after Android and Kotlin plugins
 }
 
 android {
-    namespace = "com.example.blinqpay_test"
+    namespace = "com.blinqpay.blinqpost"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "29.0.13113456"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -17,15 +16,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "11"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.blinqpay.blinqpost"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        applicationId = "com.blinqpay.blinqpost" // Unique Application ID
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -33,21 +29,19 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false // Disable code shrinking for now
+             isShrinkResources = false  //Disable resource shrinking
+            signingConfig = signingConfigs.getByName("debug") // Use debug signing for release build temporarily
         }
     }
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:28.0.0') // Add Firebase BoM
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-firestore'
+    implementation(platform("com.google.firebase:firebase-bom:28.0.0")) // Firebase BoM for managing versions
+    implementation("com.google.firebase:firebase-auth") // Firebase Authentication
+    implementation("com.google.firebase:firebase-firestore") // Firebase Firestore
 }
 
 flutter {
-    source = "../.."
+    source = "../.." // Path to Flutter module source code
 }
-
-apply plugin: 'com.google.gms.google-services' // Apply Firebase Gradle plugin

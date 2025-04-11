@@ -13,9 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp(
-    //options:DefaultFirebaseOptions.currentPlatform
-  //);
+  await Firebase.initializeApp(
+    options:DefaultFirebaseOptions.currentPlatform
+  );
   runApp(MyApp());
 }
 
@@ -107,8 +107,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(
-        begin: isActive ? 0.9 : 1.0,
-        end: isActive ? 1.3 : 1.0,
+        begin: isActive ? 0.6 : 0.8,
+        end: isActive ? 1.0 : 0.8,
       ),
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOutBack,
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 size: 28,
                 color: isActive
                     ? Theme.of(context).colorScheme.primary
-                    : Colors.grey,
+                    : Colors.black87,
               ),
               const SizedBox(height: 4),
               Text(
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   fontWeight: FontWeight.w500,
                   color: isActive
                       ? Theme.of(context).colorScheme.primary
-                      : Colors.grey,
+                      : Colors.black87,
                 ),
               ),
             ],
