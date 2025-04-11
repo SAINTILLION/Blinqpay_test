@@ -42,7 +42,7 @@ This screen is used to **populate the `posts` collection** in Firestore dynamica
 I also created an **Add User** screen to allow new users to be added to the database. This screen allows users to input basic details such as:
 - Full name
 - Email
-- Avatar (optional)
+- photo (optional)
 
 User handling:
 - The details are saved to the **`users` collection** in Firestore.
