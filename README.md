@@ -67,21 +67,34 @@ To ensure smooth video playback:
 ### Implemented Light and Dark mode with BloC
 ### For Bonus, added the Page Transition Animation (SlideTransition and FadeTransition) as well as TweenAnimationBuilder, which applies a slide-in effect where each list item (user tile) slides from the right to its normal position.
 
-### Firebase Firestore and Cloud Storage
+## Firebase Firestore and Cloud Storage
 
-During development, I used **dummy data** to simulate the Firebase Firestore collections for posts and users. However, I was unable to access Firebase Cloud Storage due to what I believe are the Firestore and Storage rules not being set up correctly.
+During development, I was unable to fetch data from the Firebase Cloud Firestore and Storage. Based on the error logs and behavior, I believe that the **Firestore and Storage rules are configured to allow only authenticated users to read and write data**.
 
-To allow access to Firebase Cloud Storage and Firestore, you must modify the Firebase rules as follows:
+However, I did **not create an authentication pipeline (Sign In / Sign Up)** because I was **unsure of the specific authentication protocol configured for the Firebase project** (e.g., email/password, Google, phone, etc.).
 
-```json
+Despite that, **all other Firebase configurations and integrations for communication with the database were completed**. This includes:
+
+- Setting up and initializing Firebase in the app
+- Integrating Firestore and Firebase Storage
+- Configuring model classes for Posts and Users
+- Writing the logic to fetch, upload, and display data
+
+### What You Can Do
+
+Once you have access to the Firebase Console and can confirm the required authentication method, you can do either of the following:
+
+1. **Modify the Firestore and Storage rules** to allow unauthenticated access (for development purposes only):
+
+```js
 // Firestore Rules
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-      allow read, write: true;
+      allow read, write;
     }
     match /posts/{postId} {
-      allow read, write: if request.auth != null;
+      allow read, write;
     }
   }
 }
@@ -90,10 +103,14 @@ service cloud.firestore {
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if true;
+      allow read, write;
     }
   }
 }
 
-Note: This only for testing purpose.
+2. **Implement the correct authentication flow** once you confirm the required auth method from your Firebase project.  
+    I previously attempted **anonymous login for testing**, but it did not work — likely due to the same rules expecting a specific authentication provider.
+
+
+Note: This only for testing purpose and is not recommended for production.
 After which populate the user post and user collection through the Add User Screen and Add Post Screen.
