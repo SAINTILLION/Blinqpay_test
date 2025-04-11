@@ -20,6 +20,8 @@ To ensure smooth video playback:
 - The video will only play when it becomes fully visible on the screen.
 - If the video goes out of view, it is paused.
 - Only one video will play at any given time to save resources and improve performance.
+## Implemented Light and Dark mode with BloC
+## For Bonus, added the Page Transition Animation (SlideTransition and FadeTransition) as well as TweenAnimationBuilder, which applies a slide-in effect where each list item (user tile) slides from the right to its normal position.
 
 ### Firebase Firestore and Cloud Storage
 
