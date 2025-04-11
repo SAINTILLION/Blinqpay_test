@@ -57,7 +57,7 @@ class _PostsScreenState extends State<PostsScreen> {
         leading: const Icon(Icons.arrow_back_ios),
         title: const Text("Posts"),
         centerTitle: true,
-        shadowColor: Colors.grey,
+        //shadowColor: Colors.grey,
         elevation: 5,
         actions: [
           IconButton(
@@ -66,7 +66,7 @@ class _PostsScreenState extends State<PostsScreen> {
           ),
         ],
       ),
-      backgroundColor: Colors.grey[200],
+      //backgroundColor: Colors.grey[200],
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           if (state is PostLoading) {
@@ -94,8 +94,6 @@ class _PostsScreenState extends State<PostsScreen> {
                 );
               },
             );
-          } else if (state is PostError) {
-            return Center(child: Text("Error: ${state.message}"));
           } else {
             return const Center(child: Text("No posts yet"));
           }

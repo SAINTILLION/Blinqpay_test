@@ -10,7 +10,6 @@ class TextThemes {
     fontSize: 10.0,
     fontWeight: FontWeight.w500,
     fontFamilyFallback: ['sans-serif'],
-    color: Colors.black,
   );
 
   // Course code style

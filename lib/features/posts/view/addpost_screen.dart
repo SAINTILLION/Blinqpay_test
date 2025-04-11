@@ -23,8 +23,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String? _fileType;
 
   Future<bool> _requestPermissions() async {
-    final permission = Platform.isIOS ? Permission.photos : Permission.storage;
-    final status = await permission.request();
+    final status = await Permission.photos.request();
 
     if (status.isGranted) return true;
 
